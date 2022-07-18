@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/5.1.0/rti_dds_profiles.xsd" version="5.1.0">
+
+    <!-- Qos Library -->
+	<qos_library name="QosLibrary">
+
+	</qos_library>
+    <!-- types -->
+    <types>
+    <struct name="ExampleMessage">
+      <member name="NumberMember" type="long" key="true"/>
+      <member name="StringMember" stringMaxLength="128" type="string"/>
+    </struct>
+
+    </types>
+
+
+    <!-- Domain Library -->
+    <domain_library name="MyDomainLibrary">
+        <domain name="MyDomain" domain_id="0">
+            <register_type name="ExampleMessage"  type_ref="ExampleMessage" />
+            <topic name="MicMessage" register_type_ref="ExampleMessage"/>
+            <topic name="buttonMessage" register_type_ref="ExampleMessage"/>
+            <topic name="TempSensor1Message" register_type_ref="ExampleMessage"/>
+            <topic name="TempSensor2Message" register_type_ref="ExampleMessage"/>
+            <topic name="ActuatorStatus" register_type_ref="ExampleMessage"/>
+            <topic name="TempSensor3Message" register_type_ref="ExampleMessage"/>
+        </domain>
+    </domain_library>
+
+
+    <!-- Participant library -->
+    <domain_participant_library name="MyParticipantLibrary">
+        <domain_participant name="MicrophoneConnector" domain_ref="MyDomainLibrary::MyDomain">
+            <publisher name="Microphone">
+                <data_writer name="MicWriter" topic_ref="MicMessage">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+        <!-- Temprature sensor 1 as subscriber & publisher for different topics -->
+        <domain_participant name="TempSensor1Connector" domain_ref="MyDomainLibrary::MyDomain">
+            <subscriber name="TemperatureSensor1Sub">
+                <data_reader name="TempSensor1Reader" topic_ref="ActuatorStatus" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+            <publisher name="TemperatureSensor1Pub">
+                <data_writer name="TempSensor1Writer" topic_ref="TempSensor1Message">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+        <!-- Temprature sensor 2 as subscriber & publisher for different topics -->
+        <domain_participant name="TempSensor2Connector" domain_ref="MyDomainLibrary::MyDomain">
+            <subscriber name="TemperatureSensor2Sub">
+                <data_reader name="TempSensor2Reader" topic_ref="ActuatorStatus" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+            <publisher name="TemperatureSensor2Pub">
+                <data_writer name="TempSensor2Writer" topic_ref="TempSensor2Message">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+        <!-- Temprature sensor 3 as  publisher -->
+        <domain_participant name="TempSensor3Connector" domain_ref="MyDomainLibrary::MyDomain">
+            <publisher name="TemperatureSensor3">
+                <data_writer name="TempSensor3Writer" topic_ref="TempSensor3Message">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+        <!-- Temprature sensor 3 as  publisher -->
+        <domain_participant name="buttonConnector" domain_ref="MyDomainLibrary::MyDomain">
+            <publisher name="button">
+                <data_writer name="buttonWriter" topic_ref="buttonMessage">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+        <!-- Dashboard subscribes from 4 different topics -->
+         <domain_participant name="DashboardConnector" domain_ref="MyDomainLibrary::MyDomain">
+            <subscriber name="DashboardSub">
+                <data_reader name="DashReadMic" topic_ref="MicMessage" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="DashReadTemp1" topic_ref="TempSensor1Message" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="DashReadTemp2" topic_ref="TempSensor2Message" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="DashReadStatus" topic_ref="ActuatorStatus" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+        </domain_participant>
+
+        <!-- Actuator subscribes from 4 different topics, and being used as publisher in one topic-->
+        <domain_participant name="ActuatorConnector" domain_ref="MyDomainLibrary::MyDomain">
+            <subscriber name="ActuatorSub">
+                <data_reader name="ActuatorReadButton" topic_ref="buttonMessage" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                 <data_reader name="ActuatorReadTemp1" topic_ref="TempSensor1Message" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                 <data_reader name="ActuatorReadTemp2" topic_ref="TempSensor2Message" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="ActuatorReadTemp3" topic_ref="TempSensor3Message" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>1</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+            <publisher name="ActuatorPub">
+                <data_writer name="ActuatorStatusWriter" topic_ref="ActuatorStatus">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+    </domain_participant_library>
+</dds>
